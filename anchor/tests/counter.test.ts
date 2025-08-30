@@ -1,8 +1,33 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
-import { Keypair } from '@solana/web3.js'
-import { Counter } from '../target/types/counter'
+import { PublicKey } from '@solana/web3.js'
+import { BankrunProvider, startAnchor as SA} from 'anchor-bankrun-patched'
+import { startAnchor } from 'solana-bankrun'
 
+import { Voting } from '../target/types/voting'
+import IDL from '../target/idl/voting.json'
+
+const votingProgramId = new PublicKey('FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS')
+
+describe('voting', async () => {
+  it('Initialize Poll', async () => {
+    const context = await startAnchor('', [{ name: 'voting', programId: votingProgramId }], [])
+
+    const provider = new BankrunProvider(context)
+
+    const votingProgram = new Program<Voting>(IDL, provider)
+    await votingProgram.methods
+      .initializePoll(
+        new anchor.BN(1),
+        new anchor.BN(0),
+        new anchor.BN(1756885603),
+        'What is your favorit peanut butter',
+      )
+      .rpc()
+  })
+})
+
+/*
 describe('counter', () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env()
@@ -27,50 +52,5 @@ describe('counter', () => {
 
     expect(currentCount.count).toEqual(0)
   })
-
-  it('Increment Counter', async () => {
-    await program.methods.increment().accounts({ counter: counterKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.counter.fetch(counterKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Increment Counter Again', async () => {
-    await program.methods.increment().accounts({ counter: counterKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.counter.fetch(counterKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(2)
-  })
-
-  it('Decrement Counter', async () => {
-    await program.methods.decrement().accounts({ counter: counterKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.counter.fetch(counterKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(1)
-  })
-
-  it('Set counter value', async () => {
-    await program.methods.set(42).accounts({ counter: counterKeypair.publicKey }).rpc()
-
-    const currentCount = await program.account.counter.fetch(counterKeypair.publicKey)
-
-    expect(currentCount.count).toEqual(42)
-  })
-
-  it('Set close the counter account', async () => {
-    await program.methods
-      .close()
-      .accounts({
-        payer: payer.publicKey,
-        counter: counterKeypair.publicKey,
-      })
-      .rpc()
-
-    // The account should no longer exist, returning null.
-    const userAccount = await program.account.counter.fetchNullable(counterKeypair.publicKey)
-    expect(userAccount).toBeNull()
-  })
 })
+*/
