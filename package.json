@@ -63,6 +63,7 @@
     "eslint-config-next": "15.5.0",
     "jest": "^30.0.5",
     "prettier": "^3.6.2",
+    "solana-bankrun": "^0.4.0",
     "tailwindcss": "^4.1.12",
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2"
