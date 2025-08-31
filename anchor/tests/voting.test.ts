@@ -1,15 +1,14 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { BankrunProvider, startAnchor as SA} from 'anchor-bankrun-patched'
-import { startAnchor } from 'solana-bankrun'
+import { BankrunProvider, startAnchor } from 'anchor-bankrun-patched'
 
 import { Voting } from '../target/types/voting'
 import IDL from '../target/idl/voting.json'
 
 const votingProgramId = new PublicKey('FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS')
 
-describe('voting', async () => {
+describe('voting', () => {
   it('Initialize Poll', async () => {
     const context = await startAnchor('', [{ name: 'voting', programId: votingProgramId }], [])
 
