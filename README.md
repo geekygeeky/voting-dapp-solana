@@ -1,20 +1,22 @@
-# voting-dapp-solana
+# Voting dApp
 
-This is a Next.js app containing:
+A decentralized Voting application built on the Solana blockchain.
+
+## Tech Stack
 
 - Tailwind CSS setup for styling
 - Useful wallet UI elements setup using [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js)
-- A basic Counter Solana program written in Anchor
-- UI components for interacting with the Counter program
+- A voting system Solana program written in Anchor
+- UI components for interacting with the Voting program
 
 ## Getting Started
 
 ### Installation
 
-#### Download the template
+#### Clone the project
 
 ```shell
-pnpm create solana-dapp@latest -t gh:solana-foundation/templates/web3js/voting-dapp-solana
+git clone https://github.com/geekygeeky/voting-dapp-solana
 ```
 
 #### Install Dependencies
