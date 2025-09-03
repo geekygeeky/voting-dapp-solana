@@ -2,6 +2,7 @@ import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { BankrunProvider, startAnchor } from 'anchor-bankrun-patched'
+import type { ProgramTestContext } from 'solana-bankrun'
 
 import { Voting } from '../target/types/voting'
 import IDL from '../target/idl/voting.json'
@@ -9,12 +10,23 @@ import IDL from '../target/idl/voting.json'
 const votingProgramId = new PublicKey('FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS')
 
 describe('voting', () => {
+
+  let context: ProgramTestContext;
+  let provider: BankrunProvider;
+  let votingProgram: Program<Voting>;
+
+
+  beforeAll(async () => {
+
+    context = await startAnchor('', [{ name: 'voting', programId: votingProgramId }], [])
+    provider = new BankrunProvider(context)
+
+    votingProgram = new Program<Voting>(IDL, provider)
+
+  })
+
   it('Initialize Poll', async () => {
-    const context = await startAnchor('', [{ name: 'voting', programId: votingProgramId }], [])
 
-    const provider = new BankrunProvider(context)
-
-    const votingProgram = new Program<Voting>(IDL, provider)
     await votingProgram.methods
       .initializePoll(
         new anchor.BN(1),
@@ -38,6 +50,33 @@ describe('voting', () => {
     expect(poll.pollId.toNumber()).toEqual(1)
     expect(poll.description).toContain('peanut butter')
     expect(poll.pollStart.toNumber()).toBeLessThan(poll.pollEnd.toNumber())
+
+  })
+
+  it('Initialize candidate', async () => {
+
+    await votingProgram.methods.initializeCandidate('Rustlang', new anchor.BN(1)).rpc();
+    await votingProgram.methods.initializeCandidate('JavaScript', new anchor.BN(1)).rpc();
+
+    const [rustLangAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('Rustlang')],
+      votingProgramId
+    );
+
+    console.log(rustLangAddress);
+
+    const rustLangCandidate = await votingProgram.account.candidate.fetch(rustLangAddress);
+    console.log(rustLangCandidate);
+    expect(rustLangCandidate.candidateVotes.toNumber()).toEqual(0)
+
+    const [javascriptAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('Javascript')],
+      votingProgramId
+    );
+
+    const javascriptCandidate = await votingProgram.account.candidate.fetch(javascriptAddress)
+    console.log(javascriptCandidate);
+    expect(javascriptCandidate.candidateVotes.toNumber()).toEqual(0)
 
   })
 })
