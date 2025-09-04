@@ -80,10 +80,10 @@ describe('voting', () => {
 
   })
 
-  it('vote', async ()=>{
+  it('vote', async () => {
     let d = await votingProgram.methods.vote('Rustlang', new anchor.BN(1)).rpc()
 
-     const [rustLangAddress] = PublicKey.findProgramAddressSync(
+    const [rustLangAddress] = PublicKey.findProgramAddressSync(
       [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('Rustlang')],
       votingProgramId
     );
