@@ -70,7 +70,7 @@ describe('voting', () => {
     expect(rustLangCandidate.candidateVotes.toNumber()).toEqual(0)
 
     const [javascriptAddress] = PublicKey.findProgramAddressSync(
-      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('Javascript')],
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('JavaScript')],
       votingProgramId
     );
 
@@ -78,6 +78,21 @@ describe('voting', () => {
     console.log(javascriptCandidate);
     expect(javascriptCandidate.candidateVotes.toNumber()).toEqual(0)
 
+  })
+
+  it('vote', async ()=>{
+    let d = await votingProgram.methods.vote('Rustlang', new anchor.BN(1)).rpc()
+
+     const [rustLangAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8), Buffer.from('Rustlang')],
+      votingProgramId
+    );
+
+    console.log(rustLangAddress);
+
+    const rustLangCandidate = await votingProgram.account.candidate.fetch(rustLangAddress);
+    console.log(rustLangCandidate);
+    expect(rustLangCandidate.candidateVotes.toNumber()).toEqual(1)
   })
 })
 
