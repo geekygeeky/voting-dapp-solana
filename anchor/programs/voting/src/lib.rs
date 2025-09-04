@@ -56,11 +56,13 @@ pub struct Vote <'info> {
     )]
     pub poll: Account<'info, Poll>,
 
-        #[account(
+    #[account(
+        mut,
         seeds = [poll_id.to_le_bytes().as_ref(), candidate_name.as_bytes()], 
         bump
     )]
-    pub candidate: Account<'info, Candidate>,
+    pub candidate: Account<'info, Candidate>
+    
 }
 
 #[derive(Accounts)]
@@ -70,6 +72,7 @@ pub struct InitializeCandidate<'info> {
     pub signer: Signer<'info>,
 
     #[account(
+        mut,
         seeds = [poll_id.to_le_bytes().as_ref()],
         bump
     )]
