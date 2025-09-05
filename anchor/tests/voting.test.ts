@@ -7,7 +7,7 @@ import type { ProgramTestContext } from 'solana-bankrun'
 import { Voting } from '../target/types/voting'
 import IDL from '../target/idl/voting.json'
 
-const votingProgramId = new PublicKey('FqzkXZdwYjurnUKetJCAvaUw5WAqbwzU6gZEwydeEfqS')
+const votingProgramId = new PublicKey('E8yamyDFQ5RPK6bd1NscbbvUavr7uhxLzRLpuyJnm3qd')
 
 describe('voting', () => {
 
