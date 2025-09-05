@@ -51,3 +51,6 @@ next-env.d.ts
 /anchor/target/.rustc_info.json
 test-ledger
 **/*.rs.bk
+
+# custom
+idea.md
